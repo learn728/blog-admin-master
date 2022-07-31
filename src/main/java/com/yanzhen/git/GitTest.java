@@ -6,5 +6,6 @@ public class GitTest{
         System.out.println("支线分支");
         System.out.println("fzp 添加一次");
         System.out.println("fzp 添加两次");
+        System.out.println("master 修改一次");
     }
 }
