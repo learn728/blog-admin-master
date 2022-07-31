@@ -24,7 +24,9 @@ public class FrontChannelController {
     @GetMapping("/get")
     public Result get(Integer id) {
         if(id == null){
+            System.out.println("master 添加一次");
             return Result.fail();
+
         }
         Channel detail = channelService.detail(id);
         return Result.success(detail);
