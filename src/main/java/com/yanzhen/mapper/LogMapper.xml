@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yanzhen.mapper.LogDao">
+
+    <resultMap id="LogMap" type="Log">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="date" property="date"/>
+        <result column="action" property="action"/>
+    </resultMap>
+
+    <insert id="create" keyProperty="id" useGeneratedKeys="true" parameterType="log">
+        insert into tb_log(name,date,action)
+        values(#{name},now(),#{action})
+    </insert>
+
+    <delete id="delete" parameterType="map">
+        delete from tb_log
+        <include refid="LogFindCriteria"></include>
+    </delete>
+
+
+    <select id="query" parameterType="map" resultMap="LogMap">
+        select * from tb_log
+       <!-- <include refid="LogFindCriteria"></include>-->
+    </select>
+
+
+<!--    <select id="count" parameterType="map" resultType="int">-->
+<!--        select count(*) from tb_user-->
+<!--        <include refid="UserFindCriteria"></include>-->
+<!--    </select>-->
+
+    <!-- 查询通用片段 -->
+    <sql id="LogFindCriteria">
+        <where>
+            <if test="id != null">and id = #{id}</if>
+            <if test="name != null and name != ''">and name like concat('%', #{name},'%')</if>
+            <if test="date != null and date != ''">and date = #{password}</if>
+            <if test="action != null and action != ''">and action like concat('%', #{action},'%')</if>
+
+        </where>
+    </sql>
+
+    <!-- 修改通用片段 -->
+    <sql id="UserUpdateCriteria">
+        <set>
+            <if test="updateUserName != null and updateUserName != ''">user_name = #{updateUserName},</if>
+            <if test="updatePassword != null and updatePassword != ''">password = #{updatePassword},</if>
+            <if test="updateNickName != null and updateNickName != ''">nick_name = #{updateNickName},</if>
+            <if test="updateAvatar != null and updateAvatar != ''">avatar = #{updateAvatar},</if>
+            <if test="updateEmail != null and updateEmail != ''">email = #{updateEmail},</if>
+            <if test="updateStatus != null and updateStatus != ''">status = #{updateStatus},</if>
+        </set>
+    </sql>
+
+</mapper>

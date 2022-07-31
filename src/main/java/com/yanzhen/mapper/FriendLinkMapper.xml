@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yanzhen.mapper.FriendLinkDao">
+
+    <resultMap id="FriendLinkMap" type="friendLink">
+        <id column="id" property="id"/>
+        <result column="url" property="url"/>
+        <result column="title" property="title"/>
+        <result column="path" property="path"/>
+        <result column="target" property="target"/>
+    </resultMap>
+
+    <insert id="create" keyProperty="id" useGeneratedKeys="true" parameterType="friendLink">
+        insert into tb_friend_link(url,title,path,target)
+        values(#{url},#{title},#{path},#{target})
+    </insert>
+
+    <delete id="delete" parameterType="map">
+        delete from tb_friend_link
+        <include refid="FriendLinkFindCriteria"></include>
+    </delete>
+
+    <update id="update" parameterType="map">
+        update tb_friend_link
+        <include refid="FriendLinkUpdateCriteria"></include>
+        <include refid="FriendLinkFindCriteria"></include>
+    </update>
+
+    <select id="query" parameterType="map" resultMap="FriendLinkMap">
+        select * from tb_friend_link
+        <include refid="FriendLinkFindCriteria"></include>
+    </select>
+
+    <select id="detail" parameterType="map" resultMap="FriendLinkMap">
+        select * from tb_friend_link
+        <include refid="FriendLinkFindCriteria"></include>
+        limit 1
+    </select>
+
+    <select id="count" parameterType="map" resultType="int">
+        select count(*) from tb_friend_link
+        <include refid="FriendLinkFindCriteria"></include>
+    </select>
+
+    <!-- 查询通用片段 -->
+    <sql id="FriendLinkFindCriteria">
+        <where>
+            <if test="id != null">and id = #{id}</if>
+            <if test="url != null and url != ''">and url = #{url}</if>
+            <if test="title != null and title != ''">and title like concat('%',#{title},'%')</if>
+            <if test="path != null and path != ''">and path = #{path}</if>
+            <if test="target != null and target != ''">and target = #{target}</if>
+        </where>
+    </sql>
+
+    <!-- 修改通用片段 -->
+    <sql id="FriendLinkUpdateCriteria">
+        <set>
+            <if test="updateUrl != null and updateUrl != ''">url = #{updateUrl},</if>
+            <if test="updateTitle != null and updateTitle != ''">title = #{updateTitle},</if>
+            <if test="updatePath != null and updatePath != ''">path = #{updatePath},</if>
+            <if test="updateTarget != null and updateTarget != ''">target = #{updateTarget},</if>
+        </set>
+    </sql>
+
+</mapper>

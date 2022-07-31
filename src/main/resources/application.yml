@@ -1,0 +1,26 @@
+server:
+  port: 8888
+  servlet:
+    context-path: /blog
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/blog?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&useSSL=false
+    username: root
+    password: 1234
+  jackson:
+    date-format: yyyy-MM-dd
+    time-zone: Asia/Shanghai
+
+mybatis:
+  mapper-locations: com/yanzhen/mapper/*.xml
+  type-aliases-package: com.yanzhen.entity
+  configuration:
+    map-underscore-to-camel-case: true
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+pagehelper:
+  helper-dialect: mysql
+#logging:
+#  level: debug

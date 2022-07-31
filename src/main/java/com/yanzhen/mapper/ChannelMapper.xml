@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yanzhen.mapper.ChannelDao">
+
+    <resultMap id="ChannelMap" type="channel">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="parent_id" property="parentId"/>
+        <result column="channel_img" property="channelImg"/>
+        <result column="summary" property="summary"/>
+        <result column="single" property="single"/>
+        <result column="url" property="url"/>
+        <result column="seo_title" property="seoTitle"/>
+        <result column="seo_keyword" property="seoKeyword"/>
+        <result column="seo_description" property="seoDescription"/>
+        <result column="content" property="content"/>
+        <result column="order_by" property="orderBy"/>
+        <result column="create_date" property="createDate"/>
+        <result column="create_user" property="createUser"/>
+        <result column="deleted_flag" property="deletedFlag"/>
+        <result column="pos" property="pos"/>
+    </resultMap>
+
+    <insert id="create" keyProperty="id" useGeneratedKeys="true" parameterType="channel">
+        insert into tb_channel(
+            name,
+            parent_id,
+            channel_img,
+            summary,
+            single,
+            url,
+            content,
+            order_by,
+            create_date,
+            create_user,
+            deleted_flag,
+            pos
+        )
+        values(
+            #{name},
+            #{parentId},
+            #{channelImg},
+            #{summary},
+            #{single},
+            #{url},
+            #{content},
+            #{orderBy},
+            now(),
+            #{createUser},
+            #{deletedFlag},
+            #{pos}
+        )
+    </insert>
+
+    <delete id="delete" parameterType="map">
+        delete from tb_channel
+        <include refid="ChannelFindCriteria"></include>
+    </delete>
+
+    <update id="update" parameterType="map">
+        update tb_channel
+        <include refid="ChannelUpdateCriteria"></include>
+        <include refid="ChannelFindCriteria"></include>
+    </update>
+    
+    <select id="query" parameterType="map" resultMap="ChannelMap">
+        select * from tb_channel
+        <include refid="ChannelFindCriteria"></include>
+    </select>
+
+    <select id="detail" parameterType="map" resultMap="ChannelMap">
+        select * from tb_channel
+        <include refid="ChannelFindCriteria"></include>
+        limit 1
+    </select>
+    
+    <select id="count" parameterType="map" resultType="int">
+        select count(*) from tb_channel
+        <include refid="ChannelFindCriteria"></include>
+    </select>
+
+    <!-- 查询通用片段 -->
+    <sql id="ChannelFindCriteria">
+        <where>
+            <if test="id != null">and id = #{id}</if>
+            <if test="name != null and name != ''">and name like concat('%', #{name},'%')</if>
+            <if test="parent_id != null and parent_id != ''">and parent_id = #{parentId}</if>
+            <if test="channel_img != null and channel_img != ''">and channel_img like concat('%', #{channelImg},'%')</if>
+            <if test="summary != null and summary != ''">and summary = #{summary}</if>
+            <if test="single != null and single != ''">and single = #{single}</if>
+            <if test="url != null and url != ''">and url = #{url}</if>
+            <if test="seo_title != null and seo_title != ''">and seo_title = #{seoTitle}</if>
+            <if test="seo_keyword != null and seo_keyword != ''">and seo_keyword = #{seoKeyword}</if>
+            <if test="seo_description != null and seo_description != ''">and seo_description = #{seoDescription}</if>
+            <if test="content != null and content != ''">and content = #{content}</if>
+            <if test="order_by != null and order_by != ''">and order_by = #{orderBy}</if>
+            <if test="create_date != null and create_date != ''">and create_date = #{createDate}</if>
+            <if test="create_user != null and create_user != ''">and create_user = #{createUser}</if>
+            <if test="deleted_flag != null and deleted_flag != ''">and deleted_flag = #{deletedFlag}</if>
+            <if test="pos != null and pos != ''">and pos = #{pos}</if>
+        </where>
+    </sql>
+
+    <!-- 修改通用片段 -->
+    <sql id="ChannelUpdateCriteria">
+        <set>
+            <if test="updateName != null and updateName != ''">name = #{updateName},</if>
+            <if test="updateParentId != null">parent_id = #{updateParentId},</if>
+            <if test="updateChannelImg != null and updateChannelImg != ''">channel_img = #{updateChannelImg},</if>
+            <if test="updateSummary != null and updateSummary != ''">summary = #{updateSummary},</if>
+            <if test="updateSingle != null and updateSingle != ''">single = #{updateSingle},</if>
+            <if test="updateUrl != null and updateUrl != ''">url = #{updateUrl},</if>
+            <if test="updateSeoTitle != null and updateSeoTitle != ''">seo_title = #{updateSeoTitle},</if>
+            <if test="updateSeoKeyword != null and updateSeoKeyword != ''">seo_keyword = #{updateSeoKeyword},</if>
+            <if test="updateSeoDescription != null and updateSeoDescription != ''">seo_description = #{updateSeoDescription},</if>
+            <if test="updateContent != null and updateContent != ''">content = #{updateContent},</if>
+            <if test="updateOrderBy != null">order_by = #{updateOrderby},</if>
+            <if test="updateCreateDate != null">create_date = #{updateCreateDate},</if>
+            <if test="updateCreateUser != null">create_user = #{updateCreateUser},</if>
+            <if test="updateDeletedFlag != null and updateDeletedFlag != ''">deleted_flag = #{updateDeletedFlag},</if>
+            <if test="updatePos != null and updatePos != ''">pos = #{updatePos},</if>
+        </set>
+    </sql>
+
+</mapper>

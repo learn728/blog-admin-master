@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yanzhen.mapper.MessageDao">
+
+    <resultMap id="MessageMap" type="message">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="email" property="email"/>
+        <result column="create_date" property="createDate"/>
+        <result column="content" property="content"/>
+    </resultMap>
+
+    <insert id="create" keyProperty="id" useGeneratedKeys="true" parameterType="message">
+        insert into tb_message(name,email,create_date,content)
+        values(#{name},#{email},now(),#{content})
+    </insert>
+
+    <delete id="delete" parameterType="map">
+        delete from tb_message
+        <include refid="UserFindCriteria"></include>
+    </delete>
+
+    
+    <select id="query" parameterType="map" resultMap="MessageMap">
+        select * from tb_message
+      <!--  <include refid="UserFindCriteria"></include>-->
+    </select>
+
+
+    
+
+
+    <!-- 查询通用片段 -->
+    <sql id="UserFindCriteria">
+        <where>
+            <if test="id != null">and id = #{id}</if>
+            <if test="name != null and name != ''">and name like concat('%', #{name},'%')</if>
+            <if test="email != null and email != ''">and email = #{email}</if>
+            <if test="content != null and content != ''">and content like concat('%', #{content},'%')</if>
+
+        </where>
+    </sql>
+
+
+</mapper>

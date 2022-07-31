@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yanzhen.mapper.TagDao">
+
+    <resultMap id="TagMap" type="tag">
+        <id column="id" property="id"/>
+        <result column="tag_name" property="tagName"/>
+    </resultMap>
+
+    <insert id="create" keyProperty="id" useGeneratedKeys="true" parameterType="tag">
+        insert into tb_tag(tag_name) values(#{tagName})
+    </insert>
+
+    <delete id="delete" parameterType="map">
+        delete from tb_tag
+        <include refid="TagFindCriteria"></include>
+    </delete>
+
+    <update id="update" parameterType="map">
+        update tb_tag
+        <include refid="TagUpdateCriteria"></include>
+        <include refid="TagFindCriteria"></include>
+    </update>
+    
+    <select id="query" parameterType="map" resultMap="TagMap">
+        select * from tb_tag
+        <include refid="TagFindCriteria"></include>
+    </select>
+
+    <select id="detail" parameterType="map" resultMap="TagMap">
+        select * from tb_tag
+        <include refid="TagFindCriteria"></include>
+        limit 1
+    </select>
+    
+    <select id="count" parameterType="map" resultType="int">
+        select count(*) from tb_tag
+        <include refid="TagFindCriteria"></include>
+    </select>
+
+    <!-- 查询通用片段 -->
+    <sql id="TagFindCriteria">
+        <where>
+            <if test="id != null">and id = #{id}</if>
+            <if test="tagName != null and tagName != ''">and tag_name like concat('%', #{tagName},'%')</if>
+        </where>
+    </sql>
+
+    <!-- 修改通用片段 -->
+    <sql id="TagUpdateCriteria">
+        <set>
+            <if test="updateTagName != null and updateTagName != ''">tag_name = #{updateTagName},</if>
+        </set>
+    </sql>
+
+</mapper>

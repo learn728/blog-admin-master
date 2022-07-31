@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yanzhen.mapper.CommentDao">
+
+    <resultMap id="CommentMap" type="comment">
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="article_id" property="articleId"/>
+        <result column="content" property="content"/>
+        <result column="create_date" property="createDate"/>
+        <result column="parent_id" property="parentId"/>
+
+        <collection property="userList" ofType="user">
+            <id column="id" property="id"></id>
+            <id column="user_name" property="userName"></id>
+            <id column="nick_name" property="nickName"></id>
+        </collection>
+
+        <collection property="articleList" ofType="article">
+            <id column="id" property="id"></id>
+            <id column="title" property="title"></id>
+        </collection>
+
+    </resultMap>
+
+    <resultMap id="CommentMap1" type="commentVo">
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="article_id" property="articleId"/>
+        <result column="content" property="content"/>
+        <result column="create_date" property="createDate"/>
+        <result column="parent_id" property="parentId"/>
+
+      <result column="user_name" property="userName"></result>
+        <result column="title" property="title"></result>
+        <result column="nick_name" property="nickName"></result>
+
+    </resultMap>
+
+    <insert id="create" keyProperty="id" useGeneratedKeys="true" parameterType="comment">
+        insert into tb_comment(user_id,create_date,content,article_id,parent_id)
+        values(#{userId},now(),#{content},#{articleId},#{parentId})
+    </insert>
+
+    <delete id="delete" parameterType="map">
+        delete from tb_comment
+        <include refid="CommentFindCriteria"></include>
+    </delete>
+
+    <update id="update" parameterType="map">
+        update tb_comment
+        <include refid="CommentUpdateCriteria"></include>
+        <include refid="CommentFindCriteria"></include>
+    </update>
+<!--查询所有人，所有文章的评论-->
+    <select id="query" parameterType="map" resultMap="CommentMap1">
+        select c.id, u.user_name,c.content ,c.create_date,a.title from tb_user u,tb_article a,tb_comment c where
+            c.user_id = u.id and c.article_id = a.id
+    </select>
+
+    <select id="detail" parameterType="map" resultMap="CommentMap">
+        select * from tb_comment
+        <include refid="CommentFindCriteria"></include>
+        limit 1
+    </select>
+
+    <select id="count" parameterType="map" resultType="int">
+        select count(*) from tb_comment
+        <include refid="CommentFindCriteria"></include>
+    </select>
+
+    <!--查询某篇文章下的所有评论-->
+    <select id="query1" parameterType="int" resultMap="CommentMap1">
+        select c.id, u.nick_name,c.content ,c.create_date,c.parent_id from tb_user u,tb_article a,tb_comment c where
+            c.user_id = u.id and c.article_id = a.id and a.id = #{id}
+    </select>
+
+    <!-- 查询通用片段 -->
+    <sql id="CommentFindCriteria">
+        <where>
+            <if test="id != null">and id = #{id}</if>
+            <if test="author != null and author != ''">and author = #{author}</if>
+            <if test="email != null and email != ''">and email = #{email}</if>
+            <if test="ip != null and ip != ''">and ip = #{ip}</if>
+            <if test="content != null and content != ''">and content like concat('%',#{content},'%')</if>
+            <if test="status != null">and status = #{status}</if>
+            <if test="articleId != null">and article_id = #{articleId}</if>
+            <if test="parentId != null">and parent_id = #{parentId}</if>
+        </where>
+    </sql>
+
+    <!-- 修改通用片段 -->
+    <sql id="CommentUpdateCriteria">
+        <set>
+            <if test="updateAuthor != null and updateAuthor != ''">author = #{updateAuthor},</if>
+            <if test="updateEmail != null and updateEmail != ''">email = #{updateEmail},</if>
+            <if test="updateIp != null and updateIp != ''">ip = #{updateIp},</if>
+            <if test="updateCreateDate != null">create_date = #{updateCreateDate},</if>
+            <if test="updateContent != null and updateContent != ''">content = #{updateContent},</if>
+            <if test="updateStatus != null">status = #{updateStatus},</if>
+            <if test="updateArticleId != null">article_id = #{updateArticleId},</if>
+            <if test="updateParentId != null">parent_id = #{updateParentId},</if>
+        </set>
+    </sql>
+
+</mapper>
